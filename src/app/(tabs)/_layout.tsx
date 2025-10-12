@@ -2,13 +2,12 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { router, Tabs } from "expo-router";
 import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   return (
-    <SafeAreaProvider>
+    <>
       {Platform.OS === "ios" && parseInt(String(Platform.Version), 10) >= 26 ? (
-        // ✅ NativeTabs für iOS 26+
+        // NativeTabs für iOS 26+
         <NativeTabs>
           <NativeTabs.Trigger name="index">
             <Label>Home</Label>
@@ -31,7 +30,7 @@ export default function RootLayout() {
           </NativeTabs.Trigger>
         </NativeTabs>
       ) : (
-        // ✅ Tabs + Floating Button für Android / ältere iOS
+        // Tabs + Floating Button für Android / ältere iOS
         <>
           <Tabs>
             <Tabs.Screen
@@ -61,13 +60,9 @@ export default function RootLayout() {
                 ),
               }}
             />
-            <Tabs.Screen
-              name="search"
-              options={{ href: null }} 
-            />  
           </Tabs>
 
-          {/* ✅ Floating Action Button */}
+          {/* Floating Action Button */}
           <TouchableOpacity
             style={styles.fab}
             onPress={() => router.push("/search")}
@@ -76,14 +71,14 @@ export default function RootLayout() {
           </TouchableOpacity>
         </>
       )}
-    </SafeAreaProvider>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   fab: {
     position: "absolute",
-    bottom: 80, // Abstand über der TabBar
+    bottom: 80,
     right: 20,
     backgroundColor: "#007AFF",
     width: 56,
@@ -95,6 +90,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4.65,
-    elevation: 8, // Android Shadow
+    elevation: 8,
   },
 });
