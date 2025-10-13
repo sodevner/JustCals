@@ -10,14 +10,14 @@ export default function SearchIndex() {
     setTimeout(() => inputRef.current?.focus(), 100);
   }, []);
 
-  const isNewIOS =
-    Platform.OS === "ios" && parseInt(String(Platform.Version), 10) >= 26;
+  const isIOS =
+    Platform.OS === "ios";
 
-  return isNewIOS ? (
+  return isIOS ? (
     // ✅ Für iOS 26+ (Native SearchTab übernimmt)
     <ScrollView>{/* Screen content */}</ScrollView>
   ) : (
-    // ✅ Für Android & ältere iOS-Versionen
+    // ✅ Für Android
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <View

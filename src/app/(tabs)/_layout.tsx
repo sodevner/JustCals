@@ -2,12 +2,17 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { router, Tabs } from "expo-router";
 import { Icon, Label, NativeTabs } from "expo-router/unstable-native-tabs";
 import { Platform, StyleSheet, TouchableOpacity } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayout() {
+const isIOS = Platform.OS === "ios";
+
+
   return (
     <>
-      {Platform.OS === "ios" && parseInt(String(Platform.Version), 10) >= 26 ? (
+      {isIOS ? (
         // NativeTabs für iOS 26+
+        <SafeAreaProvider>
         <NativeTabs>
           <NativeTabs.Trigger name="index">
             <Label>Home</Label>
@@ -29,9 +34,10 @@ export default function RootLayout() {
             <Icon sf="magnifyingglass" />
           </NativeTabs.Trigger>
         </NativeTabs>
+        </SafeAreaProvider>
       ) : (
         // Tabs + Floating Button für Android / ältere iOS
-        <>
+        <SafeAreaProvider>
           <Tabs>
             <Tabs.Screen
               name="index"
@@ -69,7 +75,7 @@ export default function RootLayout() {
           >
             <MaterialIcons name="search" size={28} color="white" />
           </TouchableOpacity>
-        </>
+        </SafeAreaProvider>
       )}
     </>
   );
