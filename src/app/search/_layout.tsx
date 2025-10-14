@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Stack } from "expo-router";
 
 export default function SearchLayout() {
   return (
@@ -6,10 +6,10 @@ export default function SearchLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: 'Search',
+          title: "Suche",
           headerSearchBarOptions: {
-            placement: 'automatic',
-            placeholder: 'Search',
+            placement: "automatic",
+            placeholder: "Wonach suchst du?",
             onChangeText: () => {},
           },
         }}
