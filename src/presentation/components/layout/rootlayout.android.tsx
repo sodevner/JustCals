@@ -60,7 +60,7 @@ export default function RootLayoutAndroid() {
 const styles = StyleSheet.create({
   fab: {
     position: "absolute",
-    bottom: 80,
+    bottom: 90,
     right: 20,
     backgroundColor: "#007AFF",
     width: 56,
