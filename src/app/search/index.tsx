@@ -1,6 +1,13 @@
 import { Stack } from "expo-router";
 import { useEffect, useRef } from "react";
-import { Platform, ScrollView, TextInput, View } from "react-native";
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function SearchIndex() {
   const inputRef = useRef<TextInput>(null);
@@ -10,26 +17,46 @@ export default function SearchIndex() {
     setTimeout(() => inputRef.current?.focus(), 100);
   }, []);
 
-  const isIOS =
-    Platform.OS === "ios";
+  const isIOS = Platform.OS === "ios";
 
   return isIOS ? (
     // ✅ Für iOS 26+ (Native SearchTab übernimmt)
-    <ScrollView>{/* Screen content */}</ScrollView>
+    <ScrollView
+      style={{
+        flex: 1,
+        backgroundColor: "#121212",
+        padding: 16,
+      }}
+    >
+      {/* Screen content */}
+    </ScrollView>
   ) : (
     // ✅ Für Android
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <View
+      <SafeAreaView
         style={{
           flex: 1,
-          backgroundColor: "white",
+          backgroundColor: "#121212",
           padding: 16,
         }}
       >
+        <Text
+          style={{
+            alignSelf: "flex-start",
+            fontSize: 20,
+            color: "#fff",
+            fontWeight: "bold",
+            marginTop: 15,
+            marginBottom: 10,
+          }}
+        >
+          Search
+        </Text>
         <TextInput
           ref={inputRef}
-          placeholder="Search"
+          placeholder="Wonach suchst du?"
+          placeholderTextColor={"#fff"}
           style={{
             borderWidth: 1,
             borderColor: "#ccc",
@@ -39,7 +66,18 @@ export default function SearchIndex() {
           }}
         />
         {/* hier kommen deine Suchergebnisse */}
-      </View>
+      </SafeAreaView>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#121212", // Dark Mode
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: { fontSize: 24, fontWeight: "700", marginBottom: 12 },
+});

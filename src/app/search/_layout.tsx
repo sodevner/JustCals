@@ -6,7 +6,14 @@ export default function SearchLayout() {
       <Stack.Screen
         name="index"
         options={{
-          title: "Suche",
+          title: "Search",
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#121212",
+          },
+
+          headerTintColor: "#fff",
+          headerTitleStyle: { fontWeight: "bold" },
           headerSearchBarOptions: {
             placement: "automatic",
             placeholder: "Wonach suchst du?",

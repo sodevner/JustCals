@@ -1,12 +1,25 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { router, Tabs } from "expo-router";
+import { router, Tabs, usePathname } from "expo-router";
 import { StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function RootLayoutAndroid() {
+  const pathname = usePathname();
+
+  const showFab = pathname === "/";
+
   return (
     <SafeAreaProvider>
-      <Tabs>
+      <Tabs
+        screenOptions={{
+          tabBarStyle: {
+            backgroundColor: "#121212", // Hintergrundfarbe der TabBar
+            borderTopColor: "transparent", // optional: obere Linie entfernen
+          },
+          tabBarActiveTintColor: "#007AFF", // Farbe für aktive Icons/Text
+          tabBarInactiveTintColor: "#888", // Farbe für inaktive Icons/Text
+        }}
+      >
         <Tabs.Screen
           name="index"
           options={{
@@ -18,12 +31,12 @@ export default function RootLayoutAndroid() {
           }}
         />
         <Tabs.Screen
-          name="settings"
+          name="recepts"
           options={{
-            title: "Settings",
+            title: "Recepts",
             headerShown: false,
             tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="settings" size={24} color={color} />
+              <MaterialIcons name="book" size={24} color={color} />
             ),
           }}
         />
@@ -42,17 +55,20 @@ export default function RootLayoutAndroid() {
           options={{
             href: null,
             headerShown: false,
+            tabBarStyle: { display: "none" },
           }}
         />
       </Tabs>
 
       {/* Floating Action Button */}
-      <TouchableOpacity
-        style={styles.fab}
-        onPress={() => router.push("/search")}
-      >
-        <MaterialIcons name="search" size={28} color="white" />
-      </TouchableOpacity>
+      {showFab && (
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => router.push("/search")}
+        >
+          <MaterialIcons name="search" size={28} color="white" />
+        </TouchableOpacity>
+      )}
     </SafeAreaProvider>
   );
 }

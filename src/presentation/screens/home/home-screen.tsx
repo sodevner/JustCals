@@ -100,50 +100,50 @@ export default function HomeScreen() {
           </View>
         </View>
       </Card>
+      <Text
+        style={{
+          color: "#fff",
+          alignSelf: "flex-start",
+          fontSize: 20,
+          fontWeight: "bold",
+        }}
+      >
+        Ernährung
+      </Text>
       <Card>
         <View style={{ alignSelf: "flex-start" }}>
           <Text
             style={{
               color: "#fff",
               alignSelf: "flex-start",
-              fontSize: 20,
-              fontWeight: "bold",
-            }}
-          >
-            Ernährung
-          </Text>
-          <Text
-            style={{
-              color: "#fff",
-              alignSelf: "flex-start",
               fontSize: 15,
               fontWeight: "bold",
-              marginTop: 5,
+              margin: 1,
             }}
           >
             Haribos (eine Packung) - 372kcal
           </Text>
         </View>
       </Card>
+      <Text
+        style={{
+          color: "#fff",
+          alignSelf: "flex-start",
+          fontSize: 20,
+          fontWeight: "bold",
+        }}
+      >
+        Aktivitäten
+      </Text>
       <Card>
         <View style={{ alignSelf: "flex-start" }}>
           <Text
             style={{
               color: "#fff",
               alignSelf: "flex-start",
-              fontSize: 20,
-              fontWeight: "bold",
-            }}
-          >
-            Aktivitäten
-          </Text>
-          <Text
-            style={{
-              color: "#fff",
-              alignSelf: "flex-start",
               fontSize: 15,
               fontWeight: "bold",
-              marginTop: 5,
+              margin: 1,
             }}
           >
             Laufen - 253kcal

@@ -10,9 +10,9 @@ export default function RootLayoutiOS() {
           <Icon sf="house.fill" />
         </NativeTabs.Trigger>
 
-        <NativeTabs.Trigger name="settings">
-          <Label>Settings</Label>
-          <Icon sf="gear" />
+        <NativeTabs.Trigger name="recepts">
+          <Label>Recepts</Label>
+          <Icon sf="book" />
         </NativeTabs.Trigger>
 
         <NativeTabs.Trigger name="profile">
