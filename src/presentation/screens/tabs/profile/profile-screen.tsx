@@ -1,13 +1,10 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { AnimatedCircularProgress } from "react-native-circular-progress";
 import { IconButton, MD3Colors } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Card from "../../components/ui/card";
+import Card from "../../../components/ui/card";
 
-export const HOME_ROUTE = "Home";
-
-export default function HomeScreen() {
+export default function ProfileScreen() {
   const dailyGoal = 2500;
   const currentCalories = 2000;
 
@@ -16,112 +13,35 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <IconButton
-        icon="calendar"
+        icon="cog"
         iconColor={MD3Colors.neutral90}
         size={25}
         onPress={() => console.log("Pressed")}
         style={{ alignSelf: "flex-end" }}
       />
-      <Text style={[styles.dayTitle, { alignSelf: "flex-start" }]}>Heute</Text>
-      <Text
-        style={{
-          alignSelf: "flex-start",
-          fontSize: 20,
-          color: "#fff",
-          fontWeight: "bold",
-          marginTop: 15,
-          marginBottom: 10,
-        }}
-      >
-        Übersicht
-      </Text>
-      <Card>
-        <View style={styles.circleContainer}>
-          <AnimatedCircularProgress
-            size={150}
-            width={15}
-            backgroundWidth={5}
-            fill={Math.min(progress * 100, 100)}
-            tintColor={currentCalories > dailyGoal ? "#ff0000" : "#00ff00"}
-            backgroundColor="#3d5875"
-            arcSweepAngle={240}
-            rotation={240}
-            lineCap="round"
-          >
-            {() => (
-              <View style={{ alignItems: "center" }}>
-                <Text
-                  style={{ color: "#fff", fontWeight: "bold", fontSize: 25 }}
-                >
-                  {dailyGoal - currentCalories}
-                </Text>
-                <Text style={{ color: "#fff", fontWeight: "bold" }}>Übrig</Text>
-              </View>
-            )}
-          </AnimatedCircularProgress>
-        </View>
-
-        <View style={styles.macros}>
-          <View style={styles.macroItem}>
-            <Text style={styles.macroLabel}>Kohlenhydrate</Text>
-            <View style={styles.macroBarBackground}>
-              <View
-                style={[
-                  styles.macroBarFill,
-                  { width: `${(180 / 300) * 100}%` },
-                ]}
-              />
-            </View>
-            <Text style={styles.macroValue}>180g</Text>
-          </View>
-          <View style={styles.macroItem}>
-            <Text style={styles.macroLabel}>Eiweiß</Text>
-            <View style={styles.macroBarBackground}>
-              <View
-                style={[
-                  styles.macroBarFill,
-                  { width: `${(180 / 300) * 100}%` },
-                ]}
-              />
-            </View>
-            <Text style={styles.macroValue}>180g</Text>
-          </View>
-          <View style={styles.macroItem}>
-            <Text style={styles.macroLabel}>Fett</Text>
-            <View style={styles.macroBarBackground}>
-              <View
-                style={[
-                  styles.macroBarFill,
-                  { width: `${(180 / 300) * 100}%` },
-                ]}
-              />
-            </View>
-            <Text style={styles.macroValue}>180g</Text>
-          </View>
-        </View>
-      </Card>
-      <Text
-        style={{
-          color: "#fff",
-          alignSelf: "flex-start",
-          fontSize: 20,
-          fontWeight: "bold",
-        }}
-      >
-        Ernährung
-      </Text>
+      <Text style={[styles.dayTitle, { alignSelf: "flex-start" }]}>Profil</Text>
       <Card>
         <View style={{ alignSelf: "flex-start" }}>
           <Text
             style={{
               color: "#fff",
               alignSelf: "flex-start",
-              fontSize: 15,
+              fontSize: 20,
               fontWeight: "bold",
-              margin: 1,
             }}
           >
-            Haribos (eine Packung) - 372kcal
+            Anonym
+          </Text>
+          <Text
+            style={{
+              color: "#fff",
+              alignSelf: "flex-start",
+              fontSize: 15,
+              fontWeight: "bold",
+              marginTop: 5,
+            }}
+          >
+            Registrieren oder einloggen! (TODO: Registrierung)
           </Text>
         </View>
       </Card>
@@ -133,7 +53,7 @@ export default function HomeScreen() {
           fontWeight: "bold",
         }}
       >
-        Aktivitäten
+        Fortschritt
       </Text>
       <Card>
         <View style={{ alignSelf: "flex-start" }}>
@@ -143,10 +63,62 @@ export default function HomeScreen() {
               alignSelf: "flex-start",
               fontSize: 15,
               fontWeight: "bold",
-              margin: 1,
+              marginTop: 5,
             }}
           >
-            Laufen - 253kcal
+            TODO: Fortschrittsanzeige (am Besten mit Diagrammen/Charts - Man
+            kann auf Monat/Woche/Jahr etc. umstellen wie so ein Trade-Chart)
+          </Text>
+        </View>
+      </Card>
+      <Text
+        style={{
+          color: "#fff",
+          alignSelf: "flex-start",
+          fontSize: 20,
+          fontWeight: "bold",
+        }}
+      >
+        Aktuelles Gewicht
+      </Text>
+      <Card>
+        <View style={{ alignSelf: "flex-start" }}>
+          <Text
+            style={{
+              color: "#fff",
+              alignSelf: "flex-start",
+              fontSize: 15,
+              fontWeight: "bold",
+              marginTop: 5,
+            }}
+          >
+            TODO: Man kann das aktuelle Gewicht mit + und - einstellen
+          </Text>
+        </View>
+      </Card>
+      <Text
+        style={{
+          color: "#fff",
+          alignSelf: "flex-start",
+          fontSize: 20,
+          fontWeight: "bold",
+        }}
+      >
+        Meine Ziele
+      </Text>
+      <Card>
+        <View style={{ alignSelf: "flex-start" }}>
+          <Text
+            style={{
+              color: "#fff",
+              alignSelf: "flex-start",
+              fontSize: 15,
+              fontWeight: "bold",
+              marginTop: 5,
+            }}
+          >
+            TODO: Man kann Ernährungsweise etc. einstellen (Ernährung: Low-Fat,
+            Ziel: Abnehmen, Kalorien: 1555kcal, Schrittziele: 10000 Schritte, )
           </Text>
         </View>
       </Card>

@@ -1,4 +1,4 @@
-import HomeScreen from "../presentation/screens/home/home-screen";
+import HomeScreen from "../presentation/screens/tabs/home/home-screen";
 
 export default function Home() {
   return <HomeScreen />;

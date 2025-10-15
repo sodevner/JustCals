@@ -1,4 +1,4 @@
-import ReceptsScreen from "../presentation/screens/recepts/recepts-screen";
+import ReceptsScreen from "../presentation/screens/tabs/recepts/recepts-screen";
 
 export default function Settings() {
   return <ReceptsScreen />;
