@@ -14,7 +14,7 @@ export default function RootLayoutAndroid() {
         screenOptions={{
           tabBarStyle: {
             backgroundColor: "#121212", // Hintergrundfarbe der TabBar
-            borderTopColor: "transparent", // optional: obere Linie entfernen
+            borderTopColor: "#121212", // optional: obere Linie entfernen
           },
           tabBarActiveTintColor: "#007AFF", // Farbe für aktive Icons/Text
           tabBarInactiveTintColor: "#888", // Farbe für inaktive Icons/Text
