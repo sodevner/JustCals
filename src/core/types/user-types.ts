@@ -1,7 +1,7 @@
 export interface UserProfile {
   id: string;
   weight?: number;
-  age?: number;
+  birth_date?: Date;
   height?: number;
   gender?: 'male' | 'female';
   activity_level?: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';
@@ -14,7 +14,7 @@ export interface UserProfile {
 
 export interface OnboardingData {
   weight: number;
-  age: number;
+  birth_date: Date;
   height: number;
   gender: 'male' | 'female';
   activity_level: 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active';

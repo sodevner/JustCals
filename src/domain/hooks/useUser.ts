@@ -90,7 +90,7 @@ export const useUser = () => {
         const mappedUser: UserProfile = {
           id: data.id,
           weight: data.weight || undefined,
-          age: data.age || undefined,
+          birth_date: data.birth_date || undefined,
           height: data.height || undefined,
           gender: data.gender as 'male' | 'female' || undefined,
           activity_level: data.activity_level as 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active' || undefined,
@@ -127,7 +127,7 @@ export const useUser = () => {
       const newProfile = {
         id: currentUser.id,
         weight: onboardingData.weight,
-        age: onboardingData.age,
+        birth_date: onboardingData.birth_date.toISOString().split('T')[0], // 👈 Format als YYYY-MM-DD
         height: onboardingData.height,
         gender: onboardingData.gender,
         activity_level: onboardingData.activity_level, // Achte auf die Benennung!
@@ -149,7 +149,7 @@ export const useUser = () => {
       const mappedUser: UserProfile = {
         id: data.id,
         weight: data.weight || undefined,
-        age: data.age || undefined,
+        birth_date: data.birth_date ? new Date(data.birth_date) : undefined, // 👈 Zurück zu Date
         height: data.height || undefined,
         gender: data.gender as 'male' | 'female' || undefined,
         activity_level: data.activity_level as 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active' || undefined,

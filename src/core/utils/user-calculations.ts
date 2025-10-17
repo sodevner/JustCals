@@ -1,8 +1,23 @@
 // utils/userCalculations.ts
 import { OnboardingData } from '../types/user-types';
 
+export const calculateAgeFromBirthDate = (birth_date: Date): number => {
+  const today = new Date();
+  let age = today.getFullYear() - birth_date.getFullYear();
+  const monthDiff = today.getMonth() - birth_date.getMonth();
+  
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth_date.getDate())) {
+    age--;
+  }
+  
+  return age;
+};
+
 export const calculateBMR = (data: OnboardingData): number => {
-  const { weight, height, age, gender } = data;
+  const { weight, height, birth_date, gender } = data;
+   const age = calculateAgeFromBirthDate(birth_date);
+
+
   
   // Mifflin-St Jeor Equation
   if (gender === 'male') {

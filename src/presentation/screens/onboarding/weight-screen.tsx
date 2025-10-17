@@ -1,6 +1,7 @@
 // screens/onboarding/WeightScreen.tsx
 import React, { useState } from "react";
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -20,22 +21,57 @@ export const WeightScreen: React.FC<WeightScreenProps> = ({
   const [weight, setWeight] = useState<string>(initialValue?.toString() || "");
 
   const handleNext = () => {
-    const weightNum = parseFloat(weight);
-    if (weightNum > 0 && weightNum < 300) {
-      onNext(weightNum);
+    const weightNum = parseFloat(weight.replace(",", ".")); // Erlaubt Komma und Punkt
+
+    if (!weight || isNaN(weightNum)) {
+      Alert.alert("Fehler", "Bitte gib ein gültiges Gewicht ein.");
+      return;
     }
+
+    if (weightNum < 30) {
+      Alert.alert("Hinweis", "Bitte gib ein realistisches Gewicht ein.");
+      return;
+    }
+
+    if (weightNum > 300) {
+      Alert.alert("Hinweis", "Bitte gib ein realistisches Gewicht ein.");
+      return;
+    }
+
+    // Runde auf 1 Dezimalstelle für Konsistenz
+    const roundedWeight = Math.round(weightNum * 10) / 10;
+    onNext(roundedWeight);
+  };
+
+  // Formatierung für die Anzeige
+  const formatWeight = (value: string): string => {
+    // Ersetze Komma durch Punkt für interne Verarbeitung
+    return value.replace(",", ".");
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Was ist dein Gewicht?</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Gewicht in kg"
-        keyboardType="numeric"
-        value={weight}
-        onChangeText={setWeight}
-      />
+      <Text style={styles.subtitle}>
+        Dein Gewicht hilft uns, deine Nährstoffbedürfnisse präzise zu berechnen.
+      </Text>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="z.B. 75.5"
+          keyboardType="decimal-pad"
+          value={weight}
+          onChangeText={(text) => setWeight(formatWeight(text))}
+          maxLength={6} // 999.9 kg
+        />
+        <Text style={styles.unit}>kg</Text>
+      </View>
+
+      <Text style={styles.exampleText}>
+        Dezimaltrennzeichen: Punkt oder Komma (75.5 oder 75,5)
+      </Text>
+
       <TouchableOpacity
         style={[styles.button, !weight && styles.buttonDisabled]}
         onPress={handleNext}
@@ -53,29 +89,60 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    backgroundColor: "white",
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 16,
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: "center",
     marginBottom: 40,
+    color: "#666",
+    lineHeight: 22,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    marginBottom: 10,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 10,
-    padding: 15,
+    flex: 1,
+    borderWidth: 2,
+    borderColor: "#E5E5E5",
+    borderRadius: 12,
+    padding: 16,
     fontSize: 18,
-    width: "100%",
+    backgroundColor: "#F8F9FA",
+    textAlign: "center",
+  },
+  unit: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#666",
+    marginLeft: 12,
+    width: 40,
+  },
+  exampleText: {
+    fontSize: 14,
+    color: "#999",
+    textAlign: "center",
     marginBottom: 30,
   },
   button: {
     backgroundColor: "#007AFF",
-    paddingHorizontal: 30,
-    paddingVertical: 15,
+    paddingHorizontal: 40,
+    paddingVertical: 16,
     borderRadius: 25,
+    width: "100%",
+    alignItems: "center",
   },
   buttonDisabled: {
-    backgroundColor: "#ccc",
+    backgroundColor: "#C7C7CC",
   },
   buttonText: {
     color: "white",

@@ -3,11 +3,16 @@ import { OnboardingData } from "@/src/core/types/user-types";
 import React, { useEffect } from "react";
 import { useOnboarding } from "../../../domain/hooks/useOnboarding";
 import { useUser } from "../../../domain/hooks/useUser";
+import { AgeScreen } from "../onboarding/age-screen";
 import { WeightScreen } from "../onboarding/weight-screen";
 import { WelcomeScreen } from "../onboarding/welcome-screen";
+import { ActivityScreen } from "./activity-level-screen";
+import { CompleteScreen } from "./complete-screen";
+import { GenderScreen } from "./gender-screen";
+import { HeightScreen } from "./height-screen";
 
 export const OnboardingFlow: React.FC = () => {
-  const { currentStep, nextStep } = useOnboarding();
+  const { currentStep, nextStep, onboardingData } = useOnboarding();
   const { createUserProfile, user } = useUser();
 
   useEffect(() => {
@@ -19,16 +24,18 @@ export const OnboardingFlow: React.FC = () => {
     }
   }, [user]);
 
-  const handleComplete = async (weight: number) => {
+  // Funktion die alle gesammelten Daten verwendet
+  const handleCompleteOnboarding = async () => {
     try {
-      console.log("🚀 Starting onboarding completion with weight:", weight);
+      console.log("🚀 Completing onboarding with data:", onboardingData);
 
+      // Verwende die gesammelten Daten aus dem Onboarding State
       const completeOnboardingData: OnboardingData = {
-        weight: weight,
-        age: 30,
-        height: 170,
-        gender: "male" as const,
-        activity_level: "moderate" as const, // Korrektur: activityLevel statt activity_level
+        weight: onboardingData.weight || 0, // Fallback falls undefined
+        birth_date: onboardingData.birth_date, // Default Wert oder später hinzufügen
+        height: onboardingData.height || 0, // Fallback falls undefined
+        gender: onboardingData.gender,
+        activity_level: onboardingData.activity_level, // Korrektur: activityLevel statt activity_level
       };
 
       await createUserProfile(completeOnboardingData);
@@ -44,8 +51,38 @@ export const OnboardingFlow: React.FC = () => {
       key="weight"
       onNext={async (weight) => {
         console.log("⚡ WeightScreen next clicked with weight:", weight);
-        await handleComplete(weight);
+        nextStep({ weight });
       }}
+    />,
+    <HeightScreen
+      key="height"
+      onNext={async (height) => {
+        console.log("⚡ HeightScreen next clicked with weight:", height);
+        nextStep({ height });
+      }}
+    />,
+    <AgeScreen
+      key="date"
+      onNext={async (birth_date) => {
+        nextStep({ birth_date });
+      }}
+    />,
+    <GenderScreen
+      key="gender"
+      onNext={async (gender) => {
+        nextStep({ gender });
+      }}
+    />,
+    <ActivityScreen
+      key="activity_level"
+      onNext={async (activity_level) => {
+        nextStep({ activity_level });
+      }}
+    />,
+    <CompleteScreen
+      key="complete"
+      onComplete={handleCompleteOnboarding}
+      userData={onboardingData}
     />,
   ];
 
