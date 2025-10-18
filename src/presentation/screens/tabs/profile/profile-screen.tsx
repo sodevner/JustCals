@@ -1,4 +1,3 @@
-import GoalsCard from "@/src/presentation/components/ui/goals-card";
 import WeightSelector from "@/src/presentation/components/ui/weight-selector";
 import React from "react";
 import {
@@ -125,7 +124,7 @@ export default function ProfileScreen() {
 
         <Text style={styles.sectionTitle}>Meine Ziele</Text>
         <Card>
-          <GoalsCard />
+          <Text></Text>
         </Card>
       </ScrollView>
     </SafeAreaView>
