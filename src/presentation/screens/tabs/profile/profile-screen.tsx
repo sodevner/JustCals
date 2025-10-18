@@ -1,3 +1,5 @@
+import GoalsCard from "@/src/presentation/components/ui/goals-card";
+import WeightSelector from "@/src/presentation/components/ui/weight-selector";
 import React from "react";
 import {
   ScrollView,
@@ -104,7 +106,13 @@ export default function ProfileScreen() {
           </Text>
         </Card>
 
-        {/* Weitere Sections */}
+        <Text style={styles.sectionTitle}>Aktuelles Gewicht</Text>
+        <Card>
+          <View style={styles.sectionContent}>
+            <WeightSelector />
+          </View>
+        </Card>
+
         <Text style={styles.sectionTitle}>Fortschritt</Text>
         <Card>
           <View style={styles.sectionContent}>
@@ -115,24 +123,9 @@ export default function ProfileScreen() {
           </View>
         </Card>
 
-        <Text style={styles.sectionTitle}>Aktuelles Gewicht</Text>
-        <Card>
-          <View style={styles.sectionContent}>
-            <Text style={styles.sectionText}>
-              TODO: Man kann das aktuelle Gewicht mit + und - einstellen
-            </Text>
-          </View>
-        </Card>
-
         <Text style={styles.sectionTitle}>Meine Ziele</Text>
         <Card>
-          <View style={styles.sectionContent}>
-            <Text style={styles.sectionText}>
-              TODO: Man kann Ernährungsweise etc. einstellen (Ernährung:
-              Low-Fat, Ziel: Abnehmen, Kalorien: 1555kcal, Schrittziele: 10000
-              Schritte)
-            </Text>
-          </View>
+          <GoalsCard />
         </Card>
       </ScrollView>
     </SafeAreaView>
@@ -236,7 +229,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   sectionContent: {
-    alignSelf: "flex-start",
+    alignSelf: "center",
   },
   sectionText: {
     color: "#fff",

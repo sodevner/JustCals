@@ -94,6 +94,7 @@ export const useUser = () => {
           height: data.height || undefined,
           gender: data.gender as 'male' | 'female' || undefined,
           activity_level: data.activity_level as 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active' || undefined,
+          goal: data.goal as "lose_weight" | "maintain" | "gain_weight" | "build_muscle" || undefined,
           dailyCalories: data.daily_calories || undefined,
           protein: data.protein || undefined,
           carbs: data.carbs || undefined,
@@ -131,6 +132,7 @@ export const useUser = () => {
         height: onboardingData.height,
         gender: onboardingData.gender,
         activity_level: onboardingData.activity_level, // Achte auf die Benennung!
+        goal: onboardingData.goal,
         daily_calories: dailyCalories,
         protein,
         carbs,
@@ -153,6 +155,7 @@ export const useUser = () => {
         height: data.height || undefined,
         gender: data.gender as 'male' | 'female' || undefined,
         activity_level: data.activity_level as 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active' || undefined,
+        goal: data.goal as "lose_weight" | "maintain" | "gain_weight" | "build_muscle" || undefined,
         dailyCalories: data.daily_calories || undefined,
         protein: data.protein || undefined,
         carbs: data.carbs || undefined,

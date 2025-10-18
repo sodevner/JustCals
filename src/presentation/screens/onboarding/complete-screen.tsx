@@ -74,6 +74,16 @@ export const CompleteScreen: React.FC<CompleteScreenProps> = ({
                   ? "Sehr aktiv"
                   : "Extrem aktiv"}
         </Text>
+        <Text style={styles.dataText}>
+          Aktivität:{" "}
+          {userData.goal === "lose_weight"
+            ? "Abnehmen"
+            : userData.goal === "maintain"
+              ? "Gewicht halten"
+              : userData.goal === "gain_weight"
+                ? "Zunehmen"
+                : "Muskeln aufbauen"}
+        </Text>
       </View>
 
       <Text style={styles.infoText}>

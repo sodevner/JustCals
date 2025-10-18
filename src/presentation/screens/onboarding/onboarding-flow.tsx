@@ -8,7 +8,9 @@ import { WeightScreen } from "../onboarding/weight-screen";
 import { WelcomeScreen } from "../onboarding/welcome-screen";
 import { ActivityScreen } from "./activity-level-screen";
 import { CompleteScreen } from "./complete-screen";
+import { DietTypeScreen } from "./diet-type-screen";
 import { GenderScreen } from "./gender-screen";
+import { GoalScreen } from "./goal-screen";
 import { HeightScreen } from "./height-screen";
 
 export const OnboardingFlow: React.FC = () => {
@@ -35,7 +37,9 @@ export const OnboardingFlow: React.FC = () => {
         birth_date: onboardingData.birth_date, // Default Wert oder später hinzufügen
         height: onboardingData.height || 0, // Fallback falls undefined
         gender: onboardingData.gender,
+        diet_type: onboardingData.diet_type,
         activity_level: onboardingData.activity_level, // Korrektur: activityLevel statt activity_level
+        goal: onboardingData.goal,
       };
 
       await createUserProfile(completeOnboardingData);
@@ -77,6 +81,18 @@ export const OnboardingFlow: React.FC = () => {
       key="activity_level"
       onNext={async (activity_level) => {
         nextStep({ activity_level });
+      }}
+    />,
+    <GoalScreen
+      key="goal"
+      onNext={async (goal) => {
+        nextStep({ goal });
+      }}
+    />,
+    <DietTypeScreen // 👈 Neu - nach dem Goal Screen
+      key="diet_type"
+      onNext={async (diet_type) => {
+        nextStep({ diet_type });
       }}
     />,
     <CompleteScreen
