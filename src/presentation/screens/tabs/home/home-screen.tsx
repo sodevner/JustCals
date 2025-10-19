@@ -13,7 +13,7 @@ export default function HomeScreen() {
 
   // Fallback Werte falls User-Daten nicht vorhanden
   const dailyGoal = user?.dailyCalories || 2500;
-  const currentCalories = 0; // Dies würdest du später aus der Datenbank holen
+  const currentCalories = 4000; // Dies würdest du später aus der Datenbank holen
   const burnedCalories = 450; // Verbrannte Kalorien - später aus DB
   const progress = currentCalories / dailyGoal;
 
@@ -56,7 +56,19 @@ export default function HomeScreen() {
         <Text style={styles.sectionTitle}>Übersicht</Text>
 
         {/* Kalorien Progress Card */}
-        <Card>
+        <View
+          style={[
+            {
+              borderColor: currentCalories > dailyGoal ? "#FF6B6B" : "#4ECDC4",
+              backgroundColor: "#1E1E1E",
+              borderRadius: 35,
+              borderWidth: 2,
+              padding: 20,
+              elevation: 5,
+              margin: 10,
+            },
+          ]}
+        >
           <View style={styles.caloriesContainer}>
             {/* Gegessene Kalorien - Links */}
             <View style={styles.calorieSide}>
@@ -124,7 +136,7 @@ export default function HomeScreen() {
               </View>
             ))}
           </View>
-        </Card>
+        </View>
 
         {/* Weitere Sections bleiben gleich */}
         <Text style={styles.sectionTitle}>Ernährung</Text>

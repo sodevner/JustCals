@@ -95,6 +95,7 @@ export const useUser = () => {
           gender: data.gender as 'male' | 'female' || undefined,
           activity_level: data.activity_level as 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active' || undefined,
           goal: data.goal as "lose_weight" | "maintain" | "gain_weight" | "build_muscle" || undefined,
+          diet_type: data.diet_type as "recommended" | "high_protein" | "low_carb" | "balanced" || undefined, // 👈 HIER FEHLTE ES
           dailyCalories: data.daily_calories || undefined,
           protein: data.protein || undefined,
           carbs: data.carbs || undefined,
@@ -128,11 +129,12 @@ export const useUser = () => {
       const newProfile = {
         id: currentUser.id,
         weight: onboardingData.weight,
-        birth_date: onboardingData.birth_date.toISOString().split('T')[0], // 👈 Format als YYYY-MM-DD
+        birth_date: onboardingData.birth_date.toISOString().split('T')[0],
         height: onboardingData.height,
         gender: onboardingData.gender,
-        activity_level: onboardingData.activity_level, // Achte auf die Benennung!
+        activity_level: onboardingData.activity_level,
         goal: onboardingData.goal,
+        diet_type: onboardingData.diet_type, // 👈 WICHTIG: Auch hier hinzufügen
         daily_calories: dailyCalories,
         protein,
         carbs,
@@ -151,11 +153,12 @@ export const useUser = () => {
       const mappedUser: UserProfile = {
         id: data.id,
         weight: data.weight || undefined,
-        birth_date: data.birth_date ? new Date(data.birth_date) : undefined, // 👈 Zurück zu Date
+        birth_date: data.birth_date ? new Date(data.birth_date) : undefined,
         height: data.height || undefined,
         gender: data.gender as 'male' | 'female' || undefined,
         activity_level: data.activity_level as 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active' || undefined,
         goal: data.goal as "lose_weight" | "maintain" | "gain_weight" | "build_muscle" || undefined,
+        diet_type: data.diet_type as "recommended" | "high_protein" | "low_carb" | "balanced" || undefined, // 👈 UND HIER
         dailyCalories: data.daily_calories || undefined,
         protein: data.protein || undefined,
         carbs: data.carbs || undefined,
