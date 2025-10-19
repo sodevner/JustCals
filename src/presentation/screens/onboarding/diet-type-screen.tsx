@@ -22,11 +22,15 @@ interface DietOption {
 interface DietTypeScreenProps {
   onNext: (diet_type: DietType) => void;
   initialValue?: DietType;
+  onBack: () => void; // 👈 Neue Prop
+  showBackButton?: boolean; // 👈 Optional um Back Button zu steuern
 }
 
 export const DietTypeScreen: React.FC<DietTypeScreenProps> = ({
   onNext,
+  onBack,
   initialValue,
+  showBackButton = true,
 }) => {
   const [selectedDiet, setSelectedDiet] = useState<DietType | null>(
     initialValue || null
@@ -79,6 +83,11 @@ export const DietTypeScreen: React.FC<DietTypeScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.container}>
+      {showBackButton && (
+        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <Text style={styles.backButtonText}>Zurück</Text>
+        </TouchableOpacity>
+      )}
       <Text style={styles.title}>Wie möchtest du essen?</Text>
       <Text style={styles.subtitle}>
         Wähle deine bevorzugte Ernährungsweise. Du kannst dies später jederzeit
@@ -150,6 +159,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "white",
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    padding: 10,
+  },
+  backButtonText: {
+    color: "#007AFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
   title: {
     fontSize: 28,

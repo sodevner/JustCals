@@ -12,11 +12,15 @@ import {
 interface HeightScreenProps {
   onNext: (height: number) => void;
   initialValue?: number;
+  onBack: () => void; // 👈 Neue Prop
+  showBackButton?: boolean; // 👈 Optional um Back Button zu steuern
 }
 
 export const HeightScreen: React.FC<HeightScreenProps> = ({
   onNext,
+  onBack,
   initialValue,
+  showBackButton = true,
 }) => {
   const [height, setHeight] = useState<string>(initialValue?.toString() || "");
 
@@ -53,6 +57,11 @@ export const HeightScreen: React.FC<HeightScreenProps> = ({
 
   return (
     <View style={styles.container}>
+      {showBackButton && (
+        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <Text style={styles.backButtonText}>Zurück</Text>
+        </TouchableOpacity>
+      )}
       <Text style={styles.title}>Wie groß bist du?</Text>
       <Text style={styles.subtitle}>
         Deine Körpergröße hilft uns, deine Nährstoffbedürfnisse präzise zu
@@ -130,6 +139,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 16,
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    padding: 10,
+  },
+  backButtonText: {
+    color: "#007AFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
   subtitle: {
     fontSize: 16,

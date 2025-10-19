@@ -25,11 +25,15 @@ interface GoalOption {
 interface GoalScreenProps {
   onNext: (goal: GoalType) => void;
   initialValue?: GoalType;
+  onBack: () => void; // 👈 Neue Prop
+  showBackButton?: boolean; // 👈 Optional um Back Button zu steuern
 }
 
 export const GoalScreen: React.FC<GoalScreenProps> = ({
   onNext,
+  onBack,
   initialValue,
+  showBackButton = true,
 }) => {
   const [selectedGoal, setSelectedGoal] = useState<GoalType | null>(
     initialValue || null
@@ -78,6 +82,11 @@ export const GoalScreen: React.FC<GoalScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.container}>
+      {showBackButton && (
+        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <Text style={styles.backButtonText}>Zurück</Text>
+        </TouchableOpacity>
+      )}
       <Text style={styles.title}>Was ist dein Ziel?</Text>
       <Text style={styles.subtitle}>
         Wähle dein primäres Ziel, damit wir deine Kalorien optimal anpassen
@@ -142,6 +151,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "white",
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    padding: 10,
+  },
+  backButtonText: {
+    color: "#007AFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
   title: {
     fontSize: 28,

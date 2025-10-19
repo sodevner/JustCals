@@ -26,11 +26,15 @@ interface ActivityOption {
 interface ActivityScreenProps {
   onNext: (activity_level: ActivityLevel) => void;
   initialValue?: ActivityLevel;
+  onBack: () => void; // 👈 Neue Prop
+  showBackButton?: boolean; // 👈 Optional um Back Button zu steuern
 }
 
 export const ActivityScreen: React.FC<ActivityScreenProps> = ({
   onNext,
+  onBack,
   initialValue,
+  showBackButton = true,
 }) => {
   const [selectedActivity, setSelectedActivity] =
     useState<ActivityLevel | null>(initialValue || null);
@@ -80,6 +84,11 @@ export const ActivityScreen: React.FC<ActivityScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.container}>
+      {showBackButton && (
+        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <Text style={styles.backButtonText}>Zurück</Text>
+        </TouchableOpacity>
+      )}
       <Text style={styles.title}>Wie aktiv bist du?</Text>
       <Text style={styles.subtitle}>
         Wähle die Stufe, die deinem wöchentlichen Aktivitätslevel am besten
@@ -134,7 +143,7 @@ export const ActivityScreen: React.FC<ActivityScreenProps> = ({
         onPress={handleNext}
         disabled={!selectedActivity}
       >
-        <Text style={styles.buttonText}>Starten</Text>
+        <Text style={styles.buttonText}>Weiter</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -145,6 +154,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: "white",
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    padding: 10,
+  },
+  backButtonText: {
+    color: "#007AFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
   title: {
     fontSize: 28,

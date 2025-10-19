@@ -4,6 +4,8 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 interface WelcomeScreenProps {
   onNext: () => void;
+  onBack: () => void; // 👈 Neue Prop
+  showBackButton?: boolean; // 👈 Optional um Back Button zu steuern
 }
 
 export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onNext }) => {

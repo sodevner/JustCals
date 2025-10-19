@@ -5,11 +5,15 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 interface CompleteScreenProps {
   onComplete: () => void;
   userData: any;
+  onBack: () => void; // 👈 Neue Prop
+  showBackButton?: boolean; // 👈 Optional um Back Button zu steuern
 }
 
 export const CompleteScreen: React.FC<CompleteScreenProps> = ({
   onComplete,
+  onBack,
   userData,
+  showBackButton = true,
 }) => {
   // Hilfsfunktion zur Altersberechnung aus Geburtsdatum
   const calculateAge = (birth_date: Date): number => {
@@ -38,6 +42,11 @@ export const CompleteScreen: React.FC<CompleteScreenProps> = ({
 
   return (
     <View style={styles.container}>
+      {showBackButton && (
+        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <Text style={styles.backButtonText}>Zurück</Text>
+        </TouchableOpacity>
+      )}
       <Text style={styles.title}>Alles fertig! 🎉</Text>
       <Text style={styles.subtitle}>
         Dein Profil wurde mit folgenden Daten erstellt:
@@ -75,7 +84,7 @@ export const CompleteScreen: React.FC<CompleteScreenProps> = ({
                   : "Extrem aktiv"}
         </Text>
         <Text style={styles.dataText}>
-          Aktivität:{" "}
+          Ziel:{" "}
           {userData.goal === "lose_weight"
             ? "Abnehmen"
             : userData.goal === "maintain"
@@ -83,6 +92,16 @@ export const CompleteScreen: React.FC<CompleteScreenProps> = ({
               : userData.goal === "gain_weight"
                 ? "Zunehmen"
                 : "Muskeln aufbauen"}
+        </Text>
+        <Text style={styles.dataText}>
+          Ernährungsweise:{" "}
+          {userData.diet_type === "recommended"
+            ? "Empfohlen"
+            : userData.diet_type === "high_protein"
+              ? "High-Protein"
+              : userData.diet_type === "low_carb"
+                ? "Low-Carb"
+                : "Ausgewogen"}
         </Text>
       </View>
 
@@ -104,6 +123,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     backgroundColor: "white",
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    padding: 10,
+  },
+  backButtonText: {
+    color: "#007AFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
   title: {
     fontSize: 32,

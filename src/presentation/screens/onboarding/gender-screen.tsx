@@ -1,17 +1,21 @@
 // screens/onboarding/GenderScreen.tsx
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type Gender = "male" | "female";
 
 interface GenderScreenProps {
   onNext: (gender: Gender) => void;
   initialValue?: Gender;
+  onBack: () => void; // 👈 Neue Prop
+  showBackButton?: boolean; // 👈 Optional um Back Button zu steuern
 }
 
 export const GenderScreen: React.FC<GenderScreenProps> = ({
   onNext,
+  onBack,
   initialValue,
+  showBackButton = true,
 }) => {
   const [selectedGender, setSelectedGender] = useState<Gender | null>(
     initialValue || null
@@ -29,6 +33,11 @@ export const GenderScreen: React.FC<GenderScreenProps> = ({
 
   return (
     <View style={styles.container}>
+      {showBackButton && (
+        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <Text style={styles.backButtonText}>Zurück</Text>
+        </TouchableOpacity>
+      )}
       <Text style={styles.title}>Was ist dein Geschlecht?</Text>
       <Text style={styles.subtitle}>
         Dies hilft uns, deine Nährstoffbedürfnisse präziser zu berechnen.
@@ -90,6 +99,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     backgroundColor: "white",
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    padding: 10,
+  },
+  backButtonText: {
+    color: "#007AFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
   title: {
     fontSize: 28,

@@ -12,11 +12,15 @@ import {
 interface WeightScreenProps {
   onNext: (weight: number) => void;
   initialValue?: number;
+  onBack: () => void; // 👈 Neue Prop
+  showBackButton?: boolean; // 👈 Optional um Back Button zu steuern
 }
 
 export const WeightScreen: React.FC<WeightScreenProps> = ({
   onNext,
+  onBack,
   initialValue,
+  showBackButton = true,
 }) => {
   const [weight, setWeight] = useState<string>(initialValue?.toString() || "");
 
@@ -51,6 +55,11 @@ export const WeightScreen: React.FC<WeightScreenProps> = ({
 
   return (
     <View style={styles.container}>
+      {showBackButton && (
+        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <Text style={styles.backButtonText}>Zurück</Text>
+        </TouchableOpacity>
+      )}
       <Text style={styles.title}>Was ist dein Gewicht?</Text>
       <Text style={styles.subtitle}>
         Dein Gewicht hilft uns, deine Nährstoffbedürfnisse präzise zu berechnen.
@@ -96,6 +105,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     marginBottom: 16,
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    padding: 10,
+  },
+  backButtonText: {
+    color: "#007AFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
   subtitle: {
     fontSize: 16,

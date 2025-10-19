@@ -1,16 +1,27 @@
 // screens/onboarding/AgeScreen.tsx
 import DateTimePicker from "@react-native-community/datetimepicker";
 import React, { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 interface AgeScreenProps {
   onNext: (birthDate: Date) => void;
   initialValue?: Date;
+  onBack: () => void; // 👈 Neue Prop
+  showBackButton?: boolean; // 👈 Optional um Back Button zu steuern
 }
 
 export const AgeScreen: React.FC<AgeScreenProps> = ({
   onNext,
+  onBack,
   initialValue,
+  showBackButton = true,
 }) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [tempDate, setTempDate] = useState<Date | null>(null);
@@ -36,12 +47,33 @@ export const AgeScreen: React.FC<AgeScreenProps> = ({
   };
 
   const handleDateChange = (event: any, selectedDate?: Date) => {
-    if (selectedDate) {
-      // Speichere die Auswahl temporär, aber setze sie noch nicht final
-      setTempDate(selectedDate);
+    // Auf Android: Schließe den Picker sofort nach Auswahl
+    if (Platform.OS === "android") {
+      setShowDatePicker(false);
+    }
 
-      // Auf iOS schließen wir den Picker nicht automatisch
-      // Der User muss auf "Fertig" klicken
+    if (selectedDate) {
+      if (Platform.OS === "android") {
+        // Auf Android setze das Datum sofort
+        setBirthDate(selectedDate);
+        const age = calculateAge(selectedDate);
+
+        // Zeige Warnungen als Alert
+        if (age < 13) {
+          Alert.alert(
+            "Hinweis",
+            "Die App ist für Personen ab 13 Jahren geeignet. Du kannst trotzdem fortfahren, aber einige Funktionen sind möglicherweise nicht optimal für dein Alter."
+          );
+        } else if (age > 120) {
+          Alert.alert(
+            "Ungültiges Alter",
+            "Bitte gib ein realistisches Geburtsdatum ein."
+          );
+        }
+      } else {
+        // Auf iOS: Speichere die Auswahl temporär
+        setTempDate(selectedDate);
+      }
     }
   };
 
@@ -124,8 +156,61 @@ export const AgeScreen: React.FC<AgeScreenProps> = ({
     return age >= 13 && age <= 120;
   };
 
+  // Unterschiedliche Logik für Android und iOS
+  const renderDatePicker = () => {
+    if (!showDatePicker) return null;
+
+    if (Platform.OS === "android") {
+      return (
+        <DateTimePicker
+          value={birthDate || defaultDate}
+          mode="date"
+          display="default" // Auf Android Standard-Dialog verwenden
+          onChange={handleDateChange}
+          maximumDate={new Date()}
+          minimumDate={new Date(1900, 0, 1)}
+        />
+      );
+    } else {
+      // iOS mit Custom UI
+      return (
+        <View style={styles.datePickerContainer}>
+          <DateTimePicker
+            value={tempDate || defaultDate}
+            mode="date"
+            display="spinner"
+            onChange={handleDateChange}
+            maximumDate={new Date()}
+            minimumDate={new Date(1900, 0, 1)}
+            style={styles.datePicker}
+            themeVariant="light"
+          />
+          <View style={styles.datePickerButtons}>
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setShowDatePicker(false)}
+            >
+              <Text style={styles.cancelButtonText}>Abbrechen</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.confirmButton}
+              onPress={handleConfirmDate}
+            >
+              <Text style={styles.confirmButtonText}>Fertig</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
+      {showBackButton && (
+        <TouchableOpacity style={styles.backButton} onPress={onBack}>
+          <Text style={styles.backButtonText}>Zurück</Text>
+        </TouchableOpacity>
+      )}
       <Text style={styles.title}>Wann bist du geboren?</Text>
       <Text style={styles.subtitle}>
         Dein Geburtsdatum hilft uns, deine Nährstoffbedürfnisse besser zu
@@ -169,34 +254,7 @@ export const AgeScreen: React.FC<AgeScreenProps> = ({
         </View>
       )}
 
-      {showDatePicker && (
-        <View style={styles.datePickerContainer}>
-          <DateTimePicker
-            value={tempDate || defaultDate}
-            mode="date"
-            display="spinner"
-            onChange={handleDateChange}
-            maximumDate={new Date()}
-            minimumDate={new Date(1900, 0, 1)}
-            style={styles.datePicker}
-            themeVariant="light"
-          />
-          <View style={styles.datePickerButtons}>
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={() => setShowDatePicker(false)}
-            >
-              <Text style={styles.cancelButtonText}>Abbrechen</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.confirmButton}
-              onPress={handleConfirmDate}
-            >
-              <Text style={styles.confirmButtonText}>Fertig</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+      {renderDatePicker()}
 
       <TouchableOpacity
         style={[styles.button, !canProceed() && styles.buttonDisabled]}
@@ -216,6 +274,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     backgroundColor: "white",
+  },
+  backButton: {
+    position: "absolute",
+    top: 50,
+    left: 20,
+    padding: 10,
+  },
+  backButtonText: {
+    color: "#007AFF",
+    fontSize: 16,
+    fontWeight: "600",
   },
   title: {
     fontSize: 28,
