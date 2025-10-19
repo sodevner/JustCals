@@ -100,16 +100,25 @@ ${product.sugar_g > 0 ? `• Zucker: ${product.sugar_g}g` : ""}
     return Math.round((valuePer100g * servingGrams) / 100);
   };
 
-  const renderProductItem = (product: NormalizedProduct): JSX.Element => (
-    <Animated.View style={{ opacity: fadeAnim }}>
+  const renderProductItem = (
+    product: NormalizedProduct,
+    index: number
+  ): JSX.Element => (
+    <Animated.View
+      key={`${product.barcode}-${index}`}
+      style={{ opacity: fadeAnim }}
+    >
       <TouchableOpacity
-        key={product.barcode}
         style={styles.productItem}
         onPress={() => handleProductPress(product)}
       >
         <View style={styles.productContent}>
           <View style={styles.productHeader}>
-            <Text style={styles.productName} numberOfLines={2}>
+            <Text
+              style={styles.productName}
+              numberOfLines={2}
+              ellipsizeMode="tail"
+            >
               {product.product_name}
             </Text>
             {product.nutrition_grade && (
@@ -130,20 +139,20 @@ ${product.sugar_g > 0 ? `• Zucker: ${product.sugar_g}g` : ""}
             )}
           </View>
 
-          <Text style={styles.productBrand}>{product.brand}</Text>
-          {product.category && (
-            <Text style={styles.productCategory}>
-              {product.category.split(",").slice(0, 2).join(", ")}
+          {/* Marke und Portionsgröße in einer Zeile */}
+          <View style={styles.brandAndServingContainer}>
+            <Text
+              style={styles.productBrand}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {product.brand}
             </Text>
-          )}
+            <Text style={styles.servingText}>{product.serving_size}</Text>
+          </View>
 
+          {/* Nährwert-Grid */}
           <View style={styles.nutritionContainer}>
-            <View style={styles.servingInfo}>
-              <Text style={styles.servingText}>
-                Portion: {product.serving_size}
-              </Text>
-            </View>
-
             <View style={styles.nutritionGrid}>
               <View style={styles.nutritionItem}>
                 <Text style={styles.nutritionValue}>
@@ -222,7 +231,7 @@ ${product.sugar_g > 0 ? `• Zucker: ${product.sugar_g}g` : ""}
               <ActivityIndicator size="large" color="#4CAF50" />
               <Text style={styles.loadingTitle}>Suche läuft...</Text>
               <Text style={styles.loadingSubtitle}>
-                Suche nach "{searchQuery}"
+                Durchsuche OpenFoodFacts nach "{searchQuery}"
               </Text>
             </View>
           </View>
@@ -245,13 +254,14 @@ ${product.sugar_g > 0 ? `• Zucker: ${product.sugar_g}g` : ""}
         {!loading && searchResults.length > 0 && (
           <View style={styles.resultsHeader}>
             <Text style={styles.resultsCount}>
-              🎉 {searchResults.length} Produkte gefunden
+              {searchResults.length} Produkte gefunden
             </Text>
-            <Text style={styles.resultsQuery}>für "{searchQuery}"</Text>
           </View>
         )}
 
-        {searchResults.map(renderProductItem)}
+        {searchResults.map((product, index) =>
+          renderProductItem(product, index)
+        )}
 
         {!loading && searchQuery && searchResults.length === 0 && (
           <View style={styles.noResults}>
@@ -290,7 +300,7 @@ ${product.sugar_g > 0 ? `• Zucker: ${product.sugar_g}g` : ""}
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <SafeAreaView style={styles.container}>
-        <Text style={styles.androidTitle}>Suchen</Text>
+        <Text style={styles.androidTitle}>Produkte suchen</Text>
         <TextInput
           ref={inputRef}
           placeholder="Was möchtest du suchen? (z.B. Vollkornbrot, Joghurt)"
@@ -307,13 +317,15 @@ ${product.sugar_g > 0 ? `• Zucker: ${product.sugar_g}g` : ""}
                 <ActivityIndicator size="large" color="#4CAF50" />
                 <Text style={styles.loadingTitle}>Suche läuft...</Text>
                 <Text style={styles.loadingSubtitle}>
-                  Suche nach "{searchQuery}"
+                  Durchsuche OpenFoodFacts nach "{searchQuery}"
                 </Text>
               </View>
             </View>
           )}
 
-          {searchResults.map(renderProductItem)}
+          {searchResults.map((product, index) =>
+            renderProductItem(product, index)
+          )}
 
           {!loading && searchQuery && searchResults.length === 0 && (
             <View style={styles.noResults}>
@@ -327,8 +339,8 @@ ${product.sugar_g > 0 ? `• Zucker: ${product.sugar_g}g` : ""}
 
           {!loading && !searchQuery && (
             <View style={styles.initialState}>
-              <Text style={styles.initialStateIcon}>👀</Text>
-              <Text style={styles.initialStateTitle}>Gib etwas ein</Text>
+              <Text style={styles.initialStateIcon}>🥦</Text>
+              <Text style={styles.initialStateTitle}>Gesunde Ernährung</Text>
               <Text style={styles.initialStateText}>
                 Beginne mit der Suche nach Lebensmitteln, um detaillierte
                 Nährwertinformationen zu erhalten
@@ -421,16 +433,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   resultsHeader: {
-    padding: 20,
-    backgroundColor: "#1E1E1E",
     marginHorizontal: 16,
     marginTop: 8,
-    borderRadius: 12,
     alignItems: "center",
   },
   resultsCount: {
-    color: "#4CAF50",
-    fontSize: 16,
+    color: "#888",
+    fontSize: 12,
     fontWeight: "bold",
     marginBottom: 4,
   },
@@ -444,8 +453,8 @@ const styles = StyleSheet.create({
     marginVertical: 6,
     borderRadius: 12,
     padding: 16,
-    borderLeftWidth: 4,
-    borderLeftColor: "#4CAF50",
+    borderWidth: 1,
+    borderColor: "#333",
   },
   productContent: {
     flex: 1,
@@ -462,6 +471,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     flex: 1,
     marginRight: 8,
+    // Flexbox für Text-Overflow
+    flexShrink: 1,
   },
   nutritionGrade: {
     paddingHorizontal: 8,
@@ -469,17 +480,38 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     minWidth: 30,
     alignItems: "center",
+    flexShrink: 0, // Verhindert, dass der Nutrition Grade schrumpft
   },
   nutritionGradeText: {
     color: "#fff",
     fontSize: 12,
     fontWeight: "bold",
   },
+  // Container für Marke und Portionsgröße
+  brandAndServingContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
   productBrand: {
-    color: "#4CAF50",
+    color: "#007AFF",
     fontSize: 14,
     fontWeight: "500",
-    marginBottom: 4,
+    flex: 1, // Nimmt verfügbaren Platz ein
+    marginRight: 8, // Abstand zur Portionsgröße
+    // Wichtig für Text-Overflow:
+    flexShrink: 1,
+  },
+  servingText: {
+    color: "#888",
+    fontSize: 12,
+    fontWeight: "500",
+    backgroundColor: "#2A2A2A",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    flexShrink: 0, // Verhindert, dass die Portionsgröße schrumpft
   },
   productCategory: {
     color: "#888",
@@ -488,15 +520,10 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
   nutritionContainer: {
-    marginBottom: 12,
+    marginBottom: 0,
   },
   servingInfo: {
     marginBottom: 8,
-  },
-  servingText: {
-    color: "#FFC107",
-    fontSize: 12,
-    fontWeight: "500",
   },
   nutritionGrid: {
     flexDirection: "row",
