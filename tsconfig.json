@@ -14,5 +14,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
-, "src/data/datasources/openfoodfacts-service.js"  ]
+, "src/data/datasources/openfoodfacts-service.ts", "src/domain/hooks/useOpenFoodFacts.ts"  ]
 }
