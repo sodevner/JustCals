@@ -1,6 +1,8 @@
+import { router } from "expo-router";
 import React from "react";
 import { Animated, ScrollView, Text, View } from "react-native";
 import { NormalizedProduct } from "../../../core/types/openfoodfacts-types";
+import { useUser } from "../../../domain/hooks/useUser";
 import { SearchStyles as styles } from "../styles/search-styles";
 import { EmptyState } from "./empty-state";
 import { ErrorState } from "./error-state";
@@ -26,6 +28,16 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
   fadeAnim,
   onRetry,
 }) => {
+  const { user: currentUser } = useUser();
+  const handleProductPress = (product: NormalizedProduct) => {
+    router.push({
+      pathname: "/product-detail",
+      params: {
+        product: JSON.stringify(product),
+        user: JSON.stringify(currentUser), // serialisieren
+      },
+    });
+  };
   if (loading) {
     return <LoadingState searchQuery={searchQuery} />;
   }
@@ -52,7 +64,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
           <ProductItem
             product={product}
             index={index}
-            onPress={onProductPress}
+            onPress={handleProductPress}
           />
         </Animated.View>
       ))}

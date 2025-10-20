@@ -58,6 +58,14 @@ export default function RootLayoutAndroid() {
             tabBarStyle: { display: "none" },
           }}
         />
+        <Tabs.Screen
+          name="product-detail"
+          options={{
+            href: null,
+            headerShown: false,
+            tabBarStyle: { display: "none" },
+          }}
+        />
       </Tabs>
 
       {/* Floating Action Button */}
