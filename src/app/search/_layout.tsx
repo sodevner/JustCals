@@ -29,9 +29,11 @@ export default function SearchLayout(): JSX.Element {
           headerStyle: {
             backgroundColor: "#FFF",
           },
+
           headerTintColor: "#000",
           headerTitleStyle: { fontWeight: "bold" },
           // presentation: 'modal', // Optional: Als Modal
+          presentation: "modal",
         }}
       />
     </Stack>
