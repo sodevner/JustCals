@@ -21,7 +21,7 @@ export default function RootLayoutAndroid() {
         }}
       >
         <Tabs.Screen
-          name="index"
+          name="(tabs)/index"
           options={{
             title: "Home",
             headerShown: false,
@@ -31,7 +31,7 @@ export default function RootLayoutAndroid() {
           }}
         />
         <Tabs.Screen
-          name="recepts"
+          name="(tabs)/recepts"
           options={{
             title: "Recepts",
             headerShown: false,
@@ -41,7 +41,7 @@ export default function RootLayoutAndroid() {
           }}
         />
         <Tabs.Screen
-          name="profile"
+          name="(tabs)/profile"
           options={{
             title: "Profile",
             headerShown: false,
@@ -52,14 +52,6 @@ export default function RootLayoutAndroid() {
         />
         <Tabs.Screen
           name="search"
-          options={{
-            href: null,
-            headerShown: false,
-            tabBarStyle: { display: "none" },
-          }}
-        />
-        <Tabs.Screen
-          name="product-detail"
           options={{
             href: null,
             headerShown: false,

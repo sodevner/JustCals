@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Alert, Animated, Platform, Text, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { JSX } from "react/jsx-runtime";

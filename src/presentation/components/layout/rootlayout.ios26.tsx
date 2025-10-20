@@ -5,17 +5,17 @@ export default function RootLayoutiOS() {
   return (
     <SafeAreaProvider>
       <NativeTabs>
-        <NativeTabs.Trigger name="index">
+        <NativeTabs.Trigger name="(tabs)/index">
           <Label>Home</Label>
           <Icon sf="house.fill" />
         </NativeTabs.Trigger>
 
-        <NativeTabs.Trigger name="recepts">
+        <NativeTabs.Trigger name="(tabs)/recepts">
           <Label>Recepts</Label>
           <Icon sf="book" />
         </NativeTabs.Trigger>
 
-        <NativeTabs.Trigger name="profile">
+        <NativeTabs.Trigger name="(tabs)/profile">
           <Label>Profile</Label>
           <Icon sf="person.fill" />
         </NativeTabs.Trigger>

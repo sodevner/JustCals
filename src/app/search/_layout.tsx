@@ -21,6 +21,19 @@ export default function SearchLayout(): JSX.Element {
           },
         }}
       />
+      <Stack.Screen
+        name="product-detail"
+        options={{
+          title: "Produkt hinzufügen", // 🔥 HIER den Titel ändern
+          headerShown: true,
+          headerStyle: {
+            backgroundColor: "#FFF",
+          },
+          headerTintColor: "#000",
+          headerTitleStyle: { fontWeight: "bold" },
+          // presentation: 'modal', // Optional: Als Modal
+        }}
+      />
     </Stack>
   );
 }
