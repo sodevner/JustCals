@@ -1,22 +1,14 @@
-// app/search/index.tsx
 import { Stack } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  Animated,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Animated, Platform, Text, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { JSX } from "react/jsx-runtime";
 import { NormalizedProduct } from "../../core/types/openfoodfacts-types";
+import { formatNutritionInfo } from "../../core/utils/nutrition-calculations";
 import { useOpenFoodFacts } from "../../domain/hooks/useOpenFoodFacts";
+import { SearchStyles as styles } from "../../presentation/components/styles/search-styles";
+import { SearchInput } from "../../presentation/components/ui/search-input";
+import { SearchResults } from "../../presentation/components/ui/search-results";
 
 export default function SearchIndex(): JSX.Element {
   const inputRef = useRef<TextInput>(null);
@@ -29,7 +21,6 @@ export default function SearchIndex(): JSX.Element {
     setTimeout(() => inputRef.current?.focus(), 100);
   }, []);
 
-  // Animation für Suchergebnisse
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -38,7 +29,6 @@ export default function SearchIndex(): JSX.Element {
     }).start();
   }, [searchResults]);
 
-  // Suchfunktion mit Debouncing
   useEffect(() => {
     const searchTimeout = setTimeout(async (): Promise<void> => {
       if (searchQuery.trim()) {
@@ -62,153 +52,16 @@ export default function SearchIndex(): JSX.Element {
   };
 
   const handleProductPress = (product: NormalizedProduct): void => {
-    const nutritionInfo = `
-Portionsgröße: ${product.serving_size}
-
-Nährwerte pro Portion:
-• Kalorien: ${calculateServingNutrition(product.energy_kcal, product.serving_size)} kcal
-• Kohlenhydrate: ${calculateServingNutrition(product.carbohydrates_g, product.serving_size)}g
-• Eiweiß: ${calculateServingNutrition(product.protein_g, product.serving_size)}g
-• Fett: ${calculateServingNutrition(product.fat_g, product.serving_size)}g
-${product.sugar_g > 0 ? `• Zucker: ${calculateServingNutrition(product.sugar_g, product.serving_size)}g` : ""}
-
-Nährwerte pro 100g:
-• Kalorien: ${product.energy_kcal} kcal
-• Kohlenhydrate: ${product.carbohydrates_g}g
-• Eiweiß: ${product.protein_g}g
-• Fett: ${product.fat_g}g
-${product.sugar_g > 0 ? `• Zucker: ${product.sugar_g}g` : ""}
-    `.trim();
-
+    const nutritionInfo = formatNutritionInfo(product);
     Alert.alert(product.product_name, nutritionInfo, [
       { text: "OK", style: "default" },
     ]);
   };
 
-  // Berechnet Nährwerte für die Portionsgröße
-  const calculateServingNutrition = (
-    valuePer100g: number,
-    servingSize: string
-  ): number => {
-    if (!servingSize || !valuePer100g) return 0;
-
-    // Extrahiere Zahlen aus der Portionsgröße (z.B. "30g" -> 30, "100 ml" -> 100)
-    const match = servingSize.match(/(\d+(\.\d+)?)/);
-    if (!match) return Math.round(valuePer100g);
-
-    const servingGrams = parseFloat(match[1]);
-    return Math.round((valuePer100g * servingGrams) / 100);
-  };
-
-  const renderProductItem = (
-    product: NormalizedProduct,
-    index: number
-  ): JSX.Element => (
-    <Animated.View
-      key={`${product.barcode}-${index}`}
-      style={{ opacity: fadeAnim }}
-    >
-      <TouchableOpacity
-        style={styles.productItem}
-        onPress={() => handleProductPress(product)}
-      >
-        <View style={styles.productContent}>
-          <View style={styles.productHeader}>
-            <Text
-              style={styles.productName}
-              numberOfLines={2}
-              ellipsizeMode="tail"
-            >
-              {product.product_name}
-            </Text>
-            {product.nutrition_grade && (
-              <View
-                style={[
-                  styles.nutritionGrade,
-                  {
-                    backgroundColor: getNutritionGradeColor(
-                      product.nutrition_grade
-                    ),
-                  },
-                ]}
-              >
-                <Text style={styles.nutritionGradeText}>
-                  {product.nutrition_grade.toUpperCase()}
-                </Text>
-              </View>
-            )}
-          </View>
-
-          {/* Marke und Portionsgröße in einer Zeile */}
-          <View style={styles.brandAndServingContainer}>
-            <Text
-              style={styles.productBrand}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {product.brand}
-            </Text>
-            <Text style={styles.servingText}>{product.serving_size}</Text>
-          </View>
-
-          {/* Nährwert-Grid */}
-          <View style={styles.nutritionContainer}>
-            <View style={styles.nutritionGrid}>
-              <View style={styles.nutritionItem}>
-                <Text style={styles.nutritionValue}>
-                  {calculateServingNutrition(
-                    product.energy_kcal,
-                    product.serving_size
-                  )}
-                </Text>
-                <Text style={styles.nutritionLabel}>kcal</Text>
-              </View>
-
-              <View style={styles.nutritionItem}>
-                <Text style={styles.nutritionValue}>
-                  {calculateServingNutrition(
-                    product.carbohydrates_g,
-                    product.serving_size
-                  )}
-                </Text>
-                <Text style={styles.nutritionLabel}>Carbs</Text>
-              </View>
-
-              <View style={styles.nutritionItem}>
-                <Text style={styles.nutritionValue}>
-                  {calculateServingNutrition(
-                    product.protein_g,
-                    product.serving_size
-                  )}
-                </Text>
-                <Text style={styles.nutritionLabel}>Protein</Text>
-              </View>
-
-              <View style={styles.nutritionItem}>
-                <Text style={styles.nutritionValue}>
-                  {calculateServingNutrition(
-                    product.fat_g,
-                    product.serving_size
-                  )}
-                </Text>
-                <Text style={styles.nutritionLabel}>Fett</Text>
-              </View>
-            </View>
-          </View>
-        </View>
-      </TouchableOpacity>
-    </Animated.View>
-  );
-
-  const getNutritionGradeColor = (grade: string): string => {
-    const colors: { [key: string]: string } = {
-      a: "#4CAF50",
-      b: "#8BC34A",
-      c: "#FFC107",
-      d: "#FF9800",
-      e: "#F44336",
-    };
-    return colors[grade.toLowerCase()] || "#757575";
+  const handleRetry = (): void => {
+    if (searchQuery) {
+      handleSearchChange(searchQuery);
+    }
   };
 
   const isIOS: boolean = Platform.OS === "ios";
@@ -223,409 +76,37 @@ ${product.sugar_g > 0 ? `• Zucker: ${product.sugar_g}g` : ""}
           },
         }}
       />
-
-      <ScrollView style={styles.resultsContainer}>
-        {loading && (
-          <View style={styles.loadingContainer}>
-            <View style={styles.loadingContent}>
-              <ActivityIndicator size="large" color="#4CAF50" />
-              <Text style={styles.loadingTitle}>Suche läuft...</Text>
-              <Text style={styles.loadingSubtitle}>
-                Durchsuche OpenFoodFacts nach "{searchQuery}"
-              </Text>
-            </View>
-          </View>
-        )}
-
-        {error && (
-          <View style={styles.errorContainer}>
-            <Text style={styles.errorIcon}>⚠️</Text>
-            <Text style={styles.errorTitle}>Fehler bei der Suche</Text>
-            <Text style={styles.errorText}>{error}</Text>
-            <TouchableOpacity
-              style={styles.retryButton}
-              onPress={() => searchQuery && handleSearchChange(searchQuery)}
-            >
-              <Text style={styles.retryButtonText}>Erneut versuchen</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {!loading && searchResults.length > 0 && (
-          <View style={styles.resultsHeader}>
-            <Text style={styles.resultsCount}>
-              {searchResults.length} Produkte gefunden
-            </Text>
-          </View>
-        )}
-
-        {searchResults.map((product, index) =>
-          renderProductItem(product, index)
-        )}
-
-        {!loading && searchQuery && searchResults.length === 0 && (
-          <View style={styles.noResults}>
-            <Text style={styles.noResultsIcon}>🔍</Text>
-            <Text style={styles.noResultsTitle}>Keine Produkte gefunden</Text>
-            <Text style={styles.noResultsText}>
-              Keine Ergebnisse für "{searchQuery}" gefunden.
-            </Text>
-            <Text style={styles.noResultsHint}>
-              Versuche es mit einem anderen Suchbegriff
-            </Text>
-          </View>
-        )}
-
-        {!loading && !searchQuery && (
-          <View style={styles.initialState}>
-            <Text style={styles.initialStateIcon}>🍎</Text>
-            <Text style={styles.initialStateTitle}>OpenFoodFacts Suche</Text>
-            <Text style={styles.initialStateText}>
-              Gib einen Produktnamen ein, um Nährwertinformationen zu finden
-            </Text>
-            <View style={styles.tipsContainer}>
-              <Text style={styles.tipsTitle}>Tipps:</Text>
-              <Text style={styles.tip}>
-                • Vollständige Produktnamen verwenden
-              </Text>
-              <Text style={styles.tip}>• Marken mit angeben</Text>
-              <Text style={styles.tip}>• Auf Rechtschreibung achten</Text>
-            </View>
-          </View>
-        )}
-      </ScrollView>
+      <SearchResults
+        results={searchResults}
+        loading={loading}
+        error={error}
+        searchQuery={searchQuery}
+        onProductPress={handleProductPress}
+        fadeAnim={fadeAnim}
+        onRetry={handleRetry}
+      />
     </SafeAreaView>
   ) : (
-    // Android Layout
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <SafeAreaView style={styles.container}>
         <Text style={styles.androidTitle}>Produkte suchen</Text>
-        <TextInput
-          ref={inputRef}
-          placeholder="Was möchtest du suchen? (z.B. Vollkornbrot, Joghurt)"
-          placeholderTextColor="#888"
+        <SearchInput
+          ref={inputRef} // Hier ref statt inputRef verwenden wenn forwardRef
           value={searchQuery}
           onChangeText={handleSearchChange}
-          style={styles.searchInput}
+          placeholder="Was möchtest du suchen? (z.B. Vollkornbrot, Joghurt)"
         />
-
-        <ScrollView style={styles.resultsContainer}>
-          {loading && (
-            <View style={styles.loadingContainer}>
-              <View style={styles.loadingContent}>
-                <ActivityIndicator size="large" color="#4CAF50" />
-                <Text style={styles.loadingTitle}>Suche läuft...</Text>
-                <Text style={styles.loadingSubtitle}>
-                  Durchsuche OpenFoodFacts nach "{searchQuery}"
-                </Text>
-              </View>
-            </View>
-          )}
-
-          {searchResults.map((product, index) =>
-            renderProductItem(product, index)
-          )}
-
-          {!loading && searchQuery && searchResults.length === 0 && (
-            <View style={styles.noResults}>
-              <Text style={styles.noResultsIcon}>🔍</Text>
-              <Text style={styles.noResultsTitle}>Keine Produkte gefunden</Text>
-              <Text style={styles.noResultsText}>
-                Keine Ergebnisse für "{searchQuery}" gefunden.
-              </Text>
-            </View>
-          )}
-
-          {!loading && !searchQuery && (
-            <View style={styles.initialState}>
-              <Text style={styles.initialStateIcon}>🥦</Text>
-              <Text style={styles.initialStateTitle}>Gesunde Ernährung</Text>
-              <Text style={styles.initialStateText}>
-                Beginne mit der Suche nach Lebensmitteln, um detaillierte
-                Nährwertinformationen zu erhalten
-              </Text>
-            </View>
-          )}
-        </ScrollView>
+        <SearchResults
+          results={searchResults}
+          loading={loading}
+          error={error}
+          searchQuery={searchQuery}
+          onProductPress={handleProductPress}
+          fadeAnim={fadeAnim}
+          onRetry={handleRetry}
+        />
       </SafeAreaView>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#121212",
-  },
-  androidTitle: {
-    fontSize: 24,
-    color: "#fff",
-    fontWeight: "bold",
-    marginTop: 15,
-    marginBottom: 10,
-    marginHorizontal: 16,
-  },
-  searchInput: {
-    borderWidth: 1,
-    borderColor: "#333",
-    backgroundColor: "#1E1E1E",
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
-    color: "#fff",
-    marginHorizontal: 16,
-    marginBottom: 16,
-  },
-  resultsContainer: {
-    flex: 1,
-  },
-  loadingContainer: {
-    padding: 40,
-    alignItems: "center",
-  },
-  loadingContent: {
-    alignItems: "center",
-  },
-  loadingTitle: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-    marginTop: 16,
-    marginBottom: 8,
-  },
-  loadingSubtitle: {
-    color: "#888",
-    fontSize: 14,
-    textAlign: "center",
-  },
-  errorContainer: {
-    backgroundColor: "#D32F2F",
-    padding: 20,
-    margin: 16,
-    borderRadius: 12,
-    alignItems: "center",
-  },
-  errorIcon: {
-    fontSize: 32,
-    marginBottom: 8,
-  },
-  errorTitle: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  errorText: {
-    color: "#fff",
-    textAlign: "center",
-    marginBottom: 16,
-    opacity: 0.9,
-  },
-  retryButton: {
-    backgroundColor: "rgba(255,255,255,0.2)",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  retryButtonText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-  resultsHeader: {
-    marginHorizontal: 16,
-    marginTop: 8,
-    alignItems: "center",
-  },
-  resultsCount: {
-    color: "#888",
-    fontSize: 12,
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  resultsQuery: {
-    color: "#888",
-    fontSize: 14,
-  },
-  productItem: {
-    backgroundColor: "#1E1E1E",
-    marginHorizontal: 16,
-    marginVertical: 6,
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "#333",
-  },
-  productContent: {
-    flex: 1,
-  },
-  productHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    marginBottom: 8,
-  },
-  productName: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "600",
-    flex: 1,
-    marginRight: 8,
-    // Flexbox für Text-Overflow
-    flexShrink: 1,
-  },
-  nutritionGrade: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    minWidth: 30,
-    alignItems: "center",
-    flexShrink: 0, // Verhindert, dass der Nutrition Grade schrumpft
-  },
-  nutritionGradeText: {
-    color: "#fff",
-    fontSize: 12,
-    fontWeight: "bold",
-  },
-  // Container für Marke und Portionsgröße
-  brandAndServingContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  productBrand: {
-    color: "#007AFF",
-    fontSize: 14,
-    fontWeight: "500",
-    flex: 1, // Nimmt verfügbaren Platz ein
-    marginRight: 8, // Abstand zur Portionsgröße
-    // Wichtig für Text-Overflow:
-    flexShrink: 1,
-  },
-  servingText: {
-    color: "#888",
-    fontSize: 12,
-    fontWeight: "500",
-    backgroundColor: "#2A2A2A",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    flexShrink: 0, // Verhindert, dass die Portionsgröße schrumpft
-  },
-  productCategory: {
-    color: "#888",
-    fontSize: 12,
-    marginBottom: 12,
-    fontStyle: "italic",
-  },
-  nutritionContainer: {
-    marginBottom: 0,
-  },
-  servingInfo: {
-    marginBottom: 8,
-  },
-  nutritionGrid: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  nutritionItem: {
-    alignItems: "center",
-    flex: 1,
-  },
-  nutritionValue: {
-    color: "#fff",
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 2,
-  },
-  nutritionLabel: {
-    color: "#888",
-    fontSize: 10,
-    textTransform: "uppercase",
-  },
-  dataQuality: {
-    marginTop: 8,
-  },
-  qualityBar: {
-    height: 4,
-    backgroundColor: "#333",
-    borderRadius: 2,
-    marginBottom: 4,
-    overflow: "hidden",
-  },
-  qualityFill: {
-    height: "100%",
-    backgroundColor: "#4CAF50",
-    borderRadius: 2,
-  },
-  qualityText: {
-    color: "#888",
-    fontSize: 10,
-  },
-  noResults: {
-    padding: 40,
-    alignItems: "center",
-  },
-  noResultsIcon: {
-    fontSize: 48,
-    marginBottom: 16,
-  },
-  noResultsTitle: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-    textAlign: "center",
-  },
-  noResultsText: {
-    color: "#888",
-    fontSize: 14,
-    textAlign: "center",
-    marginBottom: 4,
-  },
-  noResultsHint: {
-    color: "#666",
-    fontSize: 12,
-    textAlign: "center",
-  },
-  initialState: {
-    padding: 40,
-    alignItems: "center",
-  },
-  initialStateIcon: {
-    fontSize: 64,
-    marginBottom: 16,
-  },
-  initialStateTitle: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 12,
-    textAlign: "center",
-  },
-  initialStateText: {
-    color: "#888",
-    fontSize: 14,
-    textAlign: "center",
-    lineHeight: 20,
-    marginBottom: 20,
-  },
-  tipsContainer: {
-    backgroundColor: "#1E1E1E",
-    padding: 16,
-    borderRadius: 8,
-    width: "100%",
-  },
-  tipsTitle: {
-    color: "#4CAF50",
-    fontSize: 14,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  tip: {
-    color: "#888",
-    fontSize: 12,
-    marginBottom: 4,
-  },
-});
