@@ -245,7 +245,7 @@ export default function HomeScreen() {
           </Card>
         ) : (
           dailyLogs.map((log) => (
-            <Card key={log.id} style={styles.foodCard}>
+            <View key={log.id} style={styles.foodCard}>
               <View style={styles.foodItem}>
                 <View style={styles.foodInfo}>
                   <Text style={styles.foodName}>{log.product_name}</Text>
@@ -269,7 +269,7 @@ export default function HomeScreen() {
                   <Text style={styles.foodCaloriesLabel}>kcal</Text>
                 </View>
               </View>
-            </Card>
+            </View>
           ))
         )}
 
@@ -284,6 +284,16 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#121212",
+  },
+  foodCard: {
+    backgroundColor: "#1E1E1E",
+    borderColor: "#404040",
+    borderRadius: 35,
+    borderWidth: 2,
+    padding: 20,
+    elevation: 5,
+    margin: 10,
+    marginBottom: 10,
   },
   header: {
     flexDirection: "row",
@@ -383,9 +393,6 @@ const styles = StyleSheet.create({
   macroBarFill: {
     height: 6,
     borderRadius: 3,
-  },
-  foodCard: {
-    marginBottom: 10,
   },
   foodItem: {
     flexDirection: "row",
