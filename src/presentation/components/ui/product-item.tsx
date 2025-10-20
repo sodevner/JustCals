@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { ProductItemProps } from "../../../core/types/search";
-import { calculateServingNutrition } from "../../../core/utils/nutrition-calculations";
+import { getServingNutrition } from "../../../core/utils/nutrition-calculations"; // Geänderter Import
 import { getNutritionGradeColor } from "../../../core/utils/nutrition-grade";
 import { ProductItemStyles as styles } from "../styles/product-item-styles";
 
@@ -9,6 +9,9 @@ export const ProductItem: React.FC<ProductItemProps> = ({
   product,
   onPress,
 }) => {
+  // Verwende die neue Funktion die NUR direkte Serving-Werte verwendet
+  const servingNutrition = getServingNutrition(product);
+
   return (
     <TouchableOpacity
       style={styles.productItem}
@@ -49,45 +52,34 @@ export const ProductItem: React.FC<ProductItemProps> = ({
           >
             {product.brand}
           </Text>
-          <Text style={styles.servingText}>{product.serving_size}</Text>
+          <Text style={styles.servingText}>{servingNutrition.servingSize}</Text>
         </View>
 
         <View style={styles.nutritionContainer}>
           <View style={styles.nutritionGrid}>
             <View style={styles.nutritionItem}>
               <Text style={styles.nutritionValue}>
-                {calculateServingNutrition(
-                  product.energy_kcal,
-                  product.serving_size
-                )}
+                {servingNutrition.calories}
               </Text>
               <Text style={styles.nutritionLabel}>kcal</Text>
             </View>
 
             <View style={styles.nutritionItem}>
               <Text style={styles.nutritionValue}>
-                {calculateServingNutrition(
-                  product.carbohydrates_g,
-                  product.serving_size
-                )}
+                {servingNutrition.carbs}
               </Text>
               <Text style={styles.nutritionLabel}>Carbs</Text>
             </View>
 
             <View style={styles.nutritionItem}>
               <Text style={styles.nutritionValue}>
-                {calculateServingNutrition(
-                  product.protein_g,
-                  product.serving_size
-                )}
+                {servingNutrition.protein}
               </Text>
               <Text style={styles.nutritionLabel}>Protein</Text>
             </View>
 
             <View style={styles.nutritionItem}>
-              <Text style={styles.nutritionValue}>
-                {calculateServingNutrition(product.fat_g, product.serving_size)}
-              </Text>
+              <Text style={styles.nutritionValue}>{servingNutrition.fat}</Text>
               <Text style={styles.nutritionLabel}>Fett</Text>
             </View>
           </View>

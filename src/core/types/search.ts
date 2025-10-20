@@ -20,3 +20,4 @@ export interface SearchInputProps {
   placeholder: string;
   inputRef?: React.RefObject<TextInput>;
 }
+
