@@ -9,8 +9,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { getServingNutrition } from "../core/utils/nutrition-calculations";
-import { supabase } from "../core/utils/supabase";
+import { getServingNutrition } from "../../core/utils/nutrition-calculations";
+import { supabase } from "../../core/utils/supabase";
 
 type ServingType = "portion" | "grams";
 

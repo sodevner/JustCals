@@ -31,7 +31,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({
   const { user: currentUser } = useUser();
   const handleProductPress = (product: NormalizedProduct) => {
     router.push({
-      pathname: "/product-detail",
+      pathname: "/search/product-detail",
       params: {
         product: JSON.stringify(product),
         user: JSON.stringify(currentUser), // serialisieren
