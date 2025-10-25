@@ -39,7 +39,7 @@ export default function SearchIndex(): JSX.Element {
       } else {
         setSearchResults([]);
       }
-    }, 500);
+    }, 300);
 
     return () => clearTimeout(searchTimeout);
   }, [searchQuery, searchProducts]);

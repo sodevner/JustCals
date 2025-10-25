@@ -48,7 +48,7 @@ export default function ProductDetailScreen() {
   // Portion Label mit Gramm-Angabe
   const getPortionLabel = () => {
     if (!servingSizeInGrams) return "Portionen";
-    return `Portionen (${servingSizeInGrams}g)`;
+    return `Portionen (${servingSizeInGrams}${parsedProduct.serving_size?.includes("ml") ? "ml" : "g"})`;
   };
 
   // Handler für Serving-Type Wechsel

@@ -45,6 +45,7 @@ export default function RootLayoutAndroid() {
           options={{
             title: "Profile",
             headerShown: false,
+
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="person" size={24} color={color} />
             ),
